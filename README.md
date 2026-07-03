@@ -44,9 +44,10 @@ This is your starting point for building a real iOS, Android, and web app with [
    Or in the cloud with EAS (link your Expo account first, then build):
 
    ```bash
-   npx eas-cli init
-   npx eas-cli build --profile development --platform ios       # iPhone
-   npx eas-cli build --profile development --platform android   # Android device
+   npm install -g eas-cli   # once
+   eas init
+   eas build --profile development --platform ios       # iPhone
+   eas build --profile development --platform android   # Android device
    ```
 
 4. Develop:
