@@ -1,6 +1,10 @@
 # CLAUDE.md
 
-Expo SDK 56 app — React Native 0.85, React 19.2.3, TypeScript (strict), file-based routing via expo-router. Runs on iOS, Android, and web, entirely in Expo Go — no dev build or backend required.
+Expo SDK 56 app — React Native 0.85, React 19.2.3, TypeScript (strict), file-based routing via expo-router. Runs on iOS, Android, and web with no backend. Uses **development builds** — Expo Go is NOT supported and must never be suggested (the template pre-installs native modules, and the Expo Go app in the stores lags behind SDK 56).
+
+## Naming — first task on a new project
+
+`app.json` ships with `name` and `slug` set to `change-me` (and `scheme` set to `changeme`). If they still say that, renaming the app is the first thing to do before any feature work: set `name`, `slug`, and `scheme` in `app.json`, then restart the dev server. The npm package name (`react-native-ftier`) is the template's name and stays as-is.
 
 ## Expo has changed — check the docs first
 
@@ -11,10 +15,18 @@ Your training data on Expo is likely stale. Consult the official docs before wri
 - https://docs.expo.dev/llms-sdk.txt — complete Expo SDK module docs
 - https://docs.expo.dev/versions/v56.0.0/ — versioned docs for this exact SDK
 
+## Development builds & EAS
+
+The app runs in a development build (`expo-dev-client`), installed once per simulator/device:
+
+- **Local build**: `npm run ios` / `npm run android` (`expo run:*`). Needs Xcode / Android Studio. Native projects are generated on the fly; `ios/` and `android/` stay gitignored (CNG).
+- **Cloud build**: `npx eas init` links the project to the user's Expo account (it writes `extra.eas.projectId` and `owner` into `app.json` — never hardcode those in the template). Then `npx eas build --profile development` and install the build on the device (internal distribution). Build profiles live in `eas.json` — there are exactly two, `development` and `production`.
+- **Day-to-day**: once a build is installed, `npm start` is all that's needed. A native rebuild is only required when adding a package with native code that isn't already pre-installed (see Installed libraries — the common ones are).
+
 ## Commands
 
-- `npm start` — start the dev server (press `i` / `a` / `w` for iOS / Android / web)
-- `npm run ios` / `npm run android` / `npm run web` — start directly on a platform
+- `npm start` — start the dev server; connects to the installed development build (press `w` for web)
+- `npm run ios` / `npm run android` — compile and install the native app locally (first run, or after adding a new native module)
 - `npm run lint` — ESLint via `expo lint`
 - `npm run typecheck` — TypeScript check via `tsc --noEmit`
 
@@ -25,19 +37,21 @@ Install libraries with `npx expo install <package>` — never plain `npm install
 ```
 src/
 ├── app/                  # Expo Router file-based routing
-│   ├── _layout.tsx       # Root layout: ErrorBoundary, ThemeProvider, tabs
+│   ├── _layout.tsx       # Root layout: ErrorBoundary, ThemeProvider, tabs, splash gating
 │   ├── index.tsx         # Home screen
 │   └── settings.tsx      # Settings screen (theme mode picker)
 ├── components/
 │   ├── ui/               # UI primitives (Button, Input, Text)
 │   ├── error/            # Error boundaries (ErrorBoundary, ScreenErrorBoundary)
-│   └── AppTabs.tsx       # Tab bar (native tabs; AppTabs.web.tsx for web)
+│   ├── AppTabs.tsx       # Tab bar (native tabs; AppTabs.web.tsx for web)
+│   └── Screen.tsx        # Shared screen scaffold (safe areas, tab insets, max width)
 ├── hooks/                # Global hooks (useColors, useIsDark, useColorScheme)
 ├── lib/                  # theme.ts (design tokens), storage.ts (AsyncStorage helpers)
 └── stores/               # Global Zustand stores (themeStore)
 ```
 
 - Path aliases: `@/*` → `src/*`, `@/assets/*` → `assets/*` (see `tsconfig.json`).
+- **Barrels are each folder's public API.** From outside a folder, import through its `index.ts` barrel — `@/components/ui`, `@/components/error`, `@/components` (shared components like `Screen`, `AppTabs`), `@/hooks`, `@/stores`, `@/lib`. Within a folder, use relative imports. When you add a module, export it from its folder's barrel.
 - Platform-specific files: `Component.web.tsx` overrides `Component.tsx` on web (see `AppTabs`, `useColorScheme`). Prefer this over inline `Platform.OS` branching for anything non-trivial.
 - New features with data logic go in `src/features/<feature>/` with hooks (e.g. `src/features/notes/hooks/useNotes.ts`), keeping screens thin.
 
@@ -45,7 +59,7 @@ src/
 
 **All colors, spacing, typography, and border radius values MUST come from `src/lib/theme.ts`.** Never use inline colors or hardcoded style values without explicit user approval.
 
-Tokens: `lightColors` / `darkColors` (`background`, `surface`, `text`, `secondary`, `tertiary`, `border`, `primary`, `accent`, `danger`, `warning`, `success`), `spacing` (xs–xl), `fontSize` (xs–3xl), `fontWeight`, `borderRadius` (sm/md/lg/full).
+Tokens: `lightColors` / `darkColors` (`background`, `surface`, `text`, `secondary`, `tertiary`, `border`, `primary`, `accent`, `danger`, `warning`, `success`, `onDanger`), `spacing` (xs–xl), `fontSize` (xs–3xl), `fontWeight`, `borderRadius` (sm/md/lg/full), `Fonts` (per-platform font stacks), and the layout constants `BottomTabInset`, `TopTabInset`, `MaxContentWidth`.
 
 Get theme-aware colors with the `useColors()` hook, and follow the `createStyles` pattern:
 
@@ -53,8 +67,8 @@ Get theme-aware colors with the `useColors()` hook, and follow the `createStyles
 import { useMemo } from 'react'
 import { StyleSheet, View } from 'react-native'
 
-import { useColors } from '@/hooks/useColors'
-import { spacing, borderRadius, type Colors } from '@/lib/theme'
+import { useColors } from '@/hooks'
+import { spacing, borderRadius, type Colors } from '@/lib'
 
 const createStyles = (colors: Colors) =>
   StyleSheet.create({
@@ -78,13 +92,14 @@ function MyComponent() {
 }
 ```
 
-Acceptable exceptions (no token needed): layout props (`flex`, `flexDirection`, `alignItems`, `justifyContent`, positioning), relative sizing (`width: '100%'`), platform shadow values, and `opacity` for pressed/disabled states.
+Acceptable exceptions (no token needed): layout props (`flex`, `flexDirection`, `alignItems`, `justifyContent`, positioning), relative sizing (`width: '100%'`), fixed dimensions for images, icons, and decorative elements (and small layout maxima like a button column's `maxWidth`), platform shadow values, and `opacity` for pressed/disabled states or subtle decorative accents.
 
-The theme mode (light/dark/system) lives in `src/stores/themeStore.ts`, persisted with AsyncStorage. The Settings screen changes it; `useColors()`/`useIsDark()` respect it everywhere automatically.
+The theme mode (light/dark/system) lives in `src/stores/themeStore.ts`, persisted with AsyncStorage. The Settings screen changes it; `useColors()`/`useIsDark()` respect it everywhere automatically. In non-hook contexts (class components), resolve colors with `resolveIsDark` + `getColors` from `@/lib` — see `ErrorBoundary` for the pattern.
 
 ## Component architecture
 
-- **UI primitives** (`src/components/ui/`): `Button` (variants: primary, secondary, outline, ghost, danger; sizes sm/md/lg; `loading`, `fullWidth`, `leftIcon`), `Input` (label, error, hint, icons, password toggle), `Text` (variants: h1, h2, h3, body, bodySmall, caption, label, code; `color` and `weight` props). Import from the barrel: `import { Button, Text } from '@/components/ui'`.
+- **Screen scaffold** (`src/components/Screen.tsx`): every screen renders its content inside `Screen`. It provides the themed background, safe-area padding, clearance for the floating tab bars, and a centered max-width column on wide viewports. Props: `scroll` (wraps content in a ScrollView) and `centered` (vertically centers hero-style content). Don't hand-roll safe-area or tab-inset handling in screens.
+- **UI primitives** (`src/components/ui/`): `Button` (variants: primary, secondary, outline, ghost, danger; sizes sm/md/lg; `loading`, `fullWidth`, `leftIcon`), `Input` (label, error, hint, icons, password toggle), `Text` (variants: h1, h2, h3, body, bodySmall, caption, label, code; `color` and `weight` props — each `color` value maps to the theme token of the same name). Import from the barrel: `import { Button, Text } from '@/components/ui'`.
 - **Error boundaries** (`src/components/error/`): the root layout is wrapped in `ErrorBoundary`. Always wrap screen components with `ScreenErrorBoundary`:
 
 ```tsx
@@ -95,13 +110,17 @@ export default function MyScreen() {
     </ScreenErrorBoundary>
   )
 }
+
+function MyScreenContent() {
+  return <Screen scroll>…</Screen>
+}
 ```
 
 - **Screen-specific components** stay in the screen file. Only extract to `src/components/` when reused across screens.
 
 ## State & persistence
 
-- **Client state**: Zustand stores in `src/stores/`. For state that should survive restarts, use the `persist` middleware with AsyncStorage — see `themeStore.ts` for the pattern.
+- **Client state**: Zustand stores in `src/stores/`. For state that should survive restarts, use the `persist` middleware with AsyncStorage — see `themeStore.ts` for the pattern. The root layout holds the splash screen until the theme store has rehydrated (`useThemeHydration`), so the first frame renders in the correct theme.
 - **One-off persistence**: the typed `storage` helper in `src/lib/storage.ts` (JSON over AsyncStorage).
 - There is no backend in this template. Data lives on-device.
 
@@ -112,6 +131,7 @@ Use these for their respective purposes. Do not introduce alternatives without e
 | Purpose | Library |
 |---------|---------|
 | Navigation | `expo-router` (file-based; native tabs in `AppTabs.tsx`, web tabs in `AppTabs.web.tsx`) |
+| Development builds | `expo-dev-client` |
 | Images | `expo-image` — always use instead of React Native's `Image` |
 | Animations | `react-native-reanimated` |
 | Gestures | `react-native-gesture-handler` |
@@ -129,11 +149,13 @@ Use these for their respective purposes. Do not introduce alternatives without e
 | Web content | `react-native-webview` |
 | Utilities | `expo-clipboard`, `expo-sharing`, `expo-file-system` |
 
-The device-capability modules (camera, location, media, etc.) are pre-installed even though the template code doesn't use them yet — this is deliberate, so their native code is already included in any development or EAS build and adding a feature never requires a rebuild. Use these instead of introducing alternatives. Pure-JS libraries can be added freely at any time.
+The device-capability modules (camera, location, media, etc.) are pre-installed even though the template code doesn't use them yet — this is deliberate, so their native code is already included in every development and EAS build and adding a feature never requires a rebuild. Use these instead of introducing alternatives. Pure-JS libraries can be added freely at any time.
 
 ## Conventions
 
 - **React Compiler is enabled** (`experiments.reactCompiler` in `app.json`) — it handles memoization automatically. The explicit `useMemo` in the `createStyles` pattern is part of the shared convention; don't add further manual memoization.
 - **Typed routes are enabled** (`experiments.typedRoutes`). Route strings passed to `Link` / `router` are type-checked; run the dev server once to regenerate types after adding routes.
+- **React 19**: `ref` is a regular prop on function components — don't use `forwardRef` (see `Input` for the pattern).
 - File naming: PascalCase for components (`Button.tsx`, `AppTabs.tsx`), camelCase for hooks/stores/lib (`useColors.ts`, `themeStore.ts`).
-- App config lives in `app.json` (name, slug, scheme `reactnativeftier`, icons, splash screen). Changes to it require restarting the dev server.
+- **No test framework is set up.** If the user asks for tests, propose a setup (e.g. Jest + React Native Testing Library) and agree on it before adding dependencies.
+- App config lives in `app.json` (name, slug, scheme, icons, splash screen) and `eas.json` (build profiles). `app.json` changes require restarting the dev server; changes that add native configuration require a new development build.

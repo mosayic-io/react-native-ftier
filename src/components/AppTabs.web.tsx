@@ -10,8 +10,8 @@ import { useMemo } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 
 import { Text } from '@/components/ui'
-import { useColors } from '@/hooks/useColors'
-import { borderRadius, spacing, type Colors } from '@/lib/theme'
+import { useColors } from '@/hooks'
+import { borderRadius, spacing, type Colors } from '@/lib'
 
 export default function AppTabs() {
   return (
@@ -31,7 +31,7 @@ export default function AppTabs() {
   )
 }
 
-export function TabButton({ children, isFocused, ...props }: TabTriggerSlotProps) {
+function TabButton({ children, isFocused, ...props }: TabTriggerSlotProps) {
   const colors = useColors()
   const styles = useMemo(() => createStyles(colors), [colors])
 
@@ -46,7 +46,7 @@ export function TabButton({ children, isFocused, ...props }: TabTriggerSlotProps
   )
 }
 
-export function CustomTabList(props: TabListProps) {
+function CustomTabList(props: TabListProps) {
   const colors = useColors()
   const styles = useMemo(() => createStyles(colors), [colors])
 
@@ -59,8 +59,11 @@ export function CustomTabList(props: TabListProps) {
 
 const createStyles = (colors: Colors) =>
   StyleSheet.create({
+    // Floats over the content at the top of the viewport; screens clear it
+    // via TopTabInset (see Screen.tsx and theme.ts)
     tabListContainer: {
       position: 'absolute',
+      top: 0,
       width: '100%',
       padding: spacing.md,
       justifyContent: 'center',

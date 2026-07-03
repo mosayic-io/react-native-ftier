@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "react-native-ftier",
-    "slug": "react-native-ftier",
+    "name": "change-me",
+    "slug": "change-me",
     "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/logo.png",
-    "scheme": "reactnativeftier",
+    "scheme": "changeme",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true

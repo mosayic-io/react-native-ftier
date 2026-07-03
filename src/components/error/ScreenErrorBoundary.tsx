@@ -3,10 +3,9 @@ import { type ErrorInfo, type ReactNode, useCallback, useMemo } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 
-import { useColors } from '@/hooks/useColors'
-import { spacing, type Colors } from '@/lib/theme'
-import { Button } from '@/components/ui/Button'
-import { Text } from '@/components/ui/Text'
+import { useColors } from '@/hooks'
+import { spacing, type Colors } from '@/lib'
+import { Button, Text } from '@/components/ui'
 import { ErrorBoundary } from './ErrorBoundary'
 
 type ScreenErrorBoundaryProps = {

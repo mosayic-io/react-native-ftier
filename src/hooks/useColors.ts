@@ -1,20 +1,15 @@
-import { useColorScheme } from '@/hooks/useColorScheme'
-import { getColors, type Colors } from '@/lib/theme'
-import { useThemeStore } from '@/stores/themeStore'
+import { getColors, resolveIsDark, type Colors } from '@/lib'
+import { useThemeStore } from '@/stores'
 
-export function useColors(): Colors {
-  const systemColorScheme = useColorScheme()
-  const mode = useThemeStore((state) => state.mode)
-
-  const isDark =
-    mode === 'system' ? systemColorScheme === 'dark' : mode === 'dark'
-
-  return getColors(isDark)
-}
+import { useColorScheme } from './useColorScheme'
 
 export function useIsDark(): boolean {
   const systemColorScheme = useColorScheme()
   const mode = useThemeStore((state) => state.mode)
 
-  return mode === 'system' ? systemColorScheme === 'dark' : mode === 'dark'
+  return resolveIsDark(mode, systemColorScheme)
+}
+
+export function useColors(): Colors {
+  return getColors(useIsDark())
 }

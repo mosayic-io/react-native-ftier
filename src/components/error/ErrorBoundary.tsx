@@ -1,10 +1,16 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react'
 import { Appearance, StyleSheet, View } from 'react-native'
 
-import { Button } from '@/components/ui/Button'
-import { Text } from '@/components/ui/Text'
-import { getColors, spacing, borderRadius, type Colors } from '@/lib/theme'
-import { useThemeStore } from '@/stores/themeStore'
+import { Button, Text } from '@/components/ui'
+import {
+  Fonts,
+  getColors,
+  resolveIsDark,
+  spacing,
+  borderRadius,
+  type Colors,
+} from '@/lib'
+import { useThemeStore } from '@/stores'
 
 type ErrorBoundaryProps = {
   children: ReactNode
@@ -41,8 +47,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   private getColors(): Colors {
     const mode = useThemeStore.getState().mode
     const systemScheme = Appearance.getColorScheme()
-    const isDark = mode === 'dark' || (mode === 'system' && systemScheme === 'dark')
-    return getColors(isDark)
+    return getColors(resolveIsDark(mode, systemScheme))
   }
 
   private getStyles(colors: Colors) {
@@ -72,7 +77,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         maxWidth: '100%',
       },
       errorText: {
-        fontFamily: 'monospace',
+        fontFamily: Fonts.mono,
         color: colors.text,
       },
     })

@@ -7,22 +7,31 @@ import {
   type TextStyle,
 } from 'react-native'
 
-import { useColors } from '@/hooks/useColors'
-import { Fonts, fontSize, fontWeight, type Colors } from '@/lib/theme'
+import { useColors } from '@/hooks'
+import { Fonts, fontSize, fontWeight, type Colors } from '@/lib'
 
 type TextVariant = 'h1' | 'h2' | 'h3' | 'body' | 'bodySmall' | 'caption' | 'label' | 'code'
-type TextColor = 'primary' | 'secondary' | 'tertiary' | 'accent' | 'danger' | 'success'
+// Each color maps to the theme token of the same name. Omit the prop to use
+// the variant's default color.
+type TextColor = 'primary' | 'secondary' | 'tertiary' | 'accent' | 'danger' | 'warning' | 'success'
+type TextWeight = keyof typeof fontWeight
 
 type TextProps = RNTextProps & {
   variant?: TextVariant
   color?: TextColor
-  weight?: keyof typeof fontWeight
+  weight?: TextWeight
   style?: StyleProp<TextStyle>
 }
 
-const createStyles = (colors: Colors) =>
-  StyleSheet.create({
-    // Variants
+const weightStyles: Record<TextWeight, TextStyle> = StyleSheet.create({
+  normal: { fontWeight: fontWeight.normal },
+  medium: { fontWeight: fontWeight.medium },
+  semibold: { fontWeight: fontWeight.semibold },
+  bold: { fontWeight: fontWeight.bold },
+})
+
+const createStyles = (colors: Colors) => {
+  const variants = StyleSheet.create({
     h1: {
       fontSize: fontSize['3xl'],
       fontWeight: fontWeight.bold,
@@ -64,39 +73,20 @@ const createStyles = (colors: Colors) =>
       fontWeight: fontWeight.medium,
       color: colors.text,
     },
-    // Colors
-    colorPrimary: {
-      color: colors.text,
-    },
-    colorSecondary: {
-      color: colors.secondary,
-    },
-    colorTertiary: {
-      color: colors.tertiary,
-    },
-    colorAccent: {
-      color: colors.accent,
-    },
-    colorDanger: {
-      color: colors.danger,
-    },
-    colorSuccess: {
-      color: colors.success,
-    },
-    // Weights
-    weightNormal: {
-      fontWeight: fontWeight.normal,
-    },
-    weightMedium: {
-      fontWeight: fontWeight.medium,
-    },
-    weightSemibold: {
-      fontWeight: fontWeight.semibold,
-    },
-    weightBold: {
-      fontWeight: fontWeight.bold,
-    },
   })
+
+  const colorStyles: Record<TextColor, TextStyle> = StyleSheet.create({
+    primary: { color: colors.primary },
+    secondary: { color: colors.secondary },
+    tertiary: { color: colors.tertiary },
+    accent: { color: colors.accent },
+    danger: { color: colors.danger },
+    warning: { color: colors.warning },
+    success: { color: colors.success },
+  })
+
+  return { variants, colorStyles }
+}
 
 export function Text({
   variant = 'body',
@@ -112,9 +102,9 @@ export function Text({
   return (
     <RNText
       style={[
-        styles[variant],
-        color && styles[`color${color.charAt(0).toUpperCase()}${color.slice(1)}` as keyof typeof styles],
-        weight && styles[`weight${weight.charAt(0).toUpperCase()}${weight.slice(1)}` as keyof typeof styles],
+        styles.variants[variant],
+        color && styles.colorStyles[color],
+        weight && weightStyles[weight],
         style,
       ]}
       {...props}

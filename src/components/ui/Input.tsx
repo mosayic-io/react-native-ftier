@@ -1,4 +1,4 @@
-import { forwardRef, useMemo, useState } from 'react'
+import { useMemo, useState, type Ref } from 'react'
 import {
   Pressable,
   StyleSheet,
@@ -11,10 +11,11 @@ import {
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 
-import { useColors } from '@/hooks/useColors'
-import { spacing, fontSize, fontWeight, borderRadius, type Colors } from '@/lib/theme'
+import { useColors } from '@/hooks'
+import { spacing, fontSize, fontWeight, borderRadius, type Colors } from '@/lib'
 
 type InputProps = TextInputProps & {
+  ref?: Ref<TextInput>
   label?: string
   error?: string
   hint?: string
@@ -73,26 +74,24 @@ const createStyles = (colors: Colors) =>
     },
   })
 
-export const Input = forwardRef<TextInput, InputProps>(function Input(
-  {
-    label,
-    error,
-    hint,
-    containerStyle,
-    leftIcon,
-    rightIcon,
-    onRightIconPress,
-    secureTextEntry,
-    ...props
-  },
-  ref
-) {
+export function Input({
+  ref,
+  label,
+  error,
+  hint,
+  containerStyle,
+  leftIcon,
+  rightIcon,
+  onRightIconPress,
+  secureTextEntry,
+  ...props
+}: InputProps) {
   const colors = useColors()
   const styles = useMemo(() => createStyles(colors), [colors])
   const [isFocused, setIsFocused] = useState(false)
   const [isSecureVisible, setIsSecureVisible] = useState(false)
 
-  const isPassword = secureTextEntry !== undefined
+  const isPassword = secureTextEntry === true
   const showSecureToggle = isPassword && !rightIcon
 
   const handleFocus = (e: Parameters<NonNullable<TextInputProps['onFocus']>>[0]) => {
@@ -176,4 +175,4 @@ export const Input = forwardRef<TextInput, InputProps>(function Input(
       )}
     </View>
   )
-})
+}

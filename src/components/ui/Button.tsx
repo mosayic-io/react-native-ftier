@@ -16,8 +16,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 
-import { useColors } from '@/hooks/useColors'
-import { spacing, fontSize, fontWeight, borderRadius, type Colors } from '@/lib/theme'
+import { useColors } from '@/hooks'
+import { spacing, fontSize, fontWeight, borderRadius, type Colors } from '@/lib'
 
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger'
 type ButtonSize = 'sm' | 'md' | 'lg'
@@ -59,7 +59,7 @@ const createStyles = (colors: Colors) => {
     secondary: { color: colors.text },
     outline: { color: colors.text },
     ghost: { color: colors.text },
-    danger: { color: '#fff' },
+    danger: { color: colors.onDanger },
   } as const
 
   return {
@@ -97,7 +97,12 @@ export function Button({
   const styles = useMemo(() => createStyles(colors), [colors])
 
   const isDisabled = disabled || loading
-  const loaderColor = variant === 'primary' || variant === 'danger' ? colors.background : colors.text
+  const loaderColor =
+    variant === 'danger'
+      ? colors.onDanger
+      : variant === 'primary'
+        ? colors.background
+        : colors.text
 
   const scale = useSharedValue(1)
   const animatedStyle = useAnimatedStyle(() => ({
@@ -120,7 +125,6 @@ export function Button({
           styles.base.container,
           sizeStyles[size],
           styles.variant[variant],
-          fullWidth && styles.base.fullWidth,
           isDisabled && styles.base.disabled,
           style,
         ]}

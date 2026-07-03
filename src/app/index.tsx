@@ -10,38 +10,17 @@ import Animated, {
   withTiming,
   ZoomIn,
 } from 'react-native-reanimated'
-import { SafeAreaView } from 'react-native-safe-area-context'
 
+import { Screen } from '@/components'
 import { ScreenErrorBoundary } from '@/components/error'
 import { Text } from '@/components/ui'
-import { useColors } from '@/hooks/useColors'
-import {
-  borderRadius,
-  spacing,
-  BottomTabInset,
-  MaxContentWidth,
-  type Colors,
-} from '@/lib/theme'
+import { useColors } from '@/hooks'
+import { borderRadius, spacing, type Colors } from '@/lib'
 
 const features = ['Light & dark theme', 'Local storage', 'File-based routing']
 
 const createStyles = (colors: Colors) =>
   StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      flexDirection: 'row',
-      backgroundColor: colors.background,
-    },
-    safeArea: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: spacing.md,
-      paddingHorizontal: spacing.lg,
-      paddingBottom: BottomTabInset + spacing.md,
-      maxWidth: MaxContentWidth,
-    },
     logoContainer: {
       alignItems: 'center',
       justifyContent: 'center',
@@ -115,40 +94,38 @@ function HomeScreenContent() {
   }))
 
   return (
-    <View style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.logoContainer}>
-          <Animated.View style={[styles.glow, pulseStyle]} />
-          <Animated.View entering={ZoomIn.springify().damping(12)} style={floatStyle}>
-            <Image source={require('@/assets/images/logo.png')} style={styles.logo} />
+    <Screen centered>
+      <View style={styles.logoContainer}>
+        <Animated.View style={[styles.glow, pulseStyle]} />
+        <Animated.View entering={ZoomIn.springify().damping(12)} style={floatStyle}>
+          <Image source={require('@/assets/images/logo.png')} style={styles.logo} />
+        </Animated.View>
+      </View>
+
+      <Animated.View entering={FadeInDown.delay(150).duration(600)}>
+        <Text variant="h1" style={styles.title}>
+          Your app starts here
+        </Text>
+      </Animated.View>
+
+      <Animated.View entering={FadeInDown.delay(300).duration(600)}>
+        <Text color="secondary" style={styles.subtitle}>
+          Open your AI assistant and describe what you want to build.
+        </Text>
+      </Animated.View>
+
+      <View style={styles.chipRow}>
+        {features.map((feature, index) => (
+          <Animated.View
+            key={feature}
+            entering={FadeInDown.delay(450 + index * 100).duration(600)}
+            style={styles.chip}
+          >
+            <Text variant="caption">{feature}</Text>
           </Animated.View>
-        </View>
-
-        <Animated.View entering={FadeInDown.delay(150).duration(600)}>
-          <Text variant="h1" style={styles.title}>
-            Your app starts here
-          </Text>
-        </Animated.View>
-
-        <Animated.View entering={FadeInDown.delay(300).duration(600)}>
-          <Text color="secondary" style={styles.subtitle}>
-            Open your AI assistant and describe what you want to build.
-          </Text>
-        </Animated.View>
-
-        <View style={styles.chipRow}>
-          {features.map((feature, index) => (
-            <Animated.View
-              key={feature}
-              entering={FadeInDown.delay(450 + index * 100).duration(600)}
-              style={styles.chip}
-            >
-              <Text variant="caption">{feature}</Text>
-            </Animated.View>
-          ))}
-        </View>
-      </SafeAreaView>
-    </View>
+        ))}
+      </View>
+    </Screen>
   )
 }
 

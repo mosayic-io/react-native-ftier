@@ -1,4 +1,4 @@
-import { Platform } from 'react-native'
+import { Platform, type ColorSchemeName } from 'react-native'
 
 export const lightColors = {
   background: '#fff',
@@ -12,6 +12,7 @@ export const lightColors = {
   danger: '#ff3b30',
   warning: '#ff9500',
   success: '#34c759',
+  onDanger: '#fff',
 } as const
 
 export const darkColors = {
@@ -26,6 +27,7 @@ export const darkColors = {
   danger: '#ff453a',
   warning: '#ff9f0a',
   success: '#30d158',
+  onDanger: '#fff',
 } as const
 
 export type Colors = {
@@ -40,6 +42,7 @@ export type Colors = {
   danger: string
   warning: string
   success: string
+  onDanger: string
 }
 
 export const spacing = {
@@ -80,6 +83,16 @@ export function getColors(isDark: boolean): Colors {
   return isDark ? darkColors : lightColors
 }
 
+// Single source of truth for resolving the effective color scheme.
+// Components should use the useIsDark()/useColors() hooks; this helper exists
+// for non-hook contexts (e.g. class components like ErrorBoundary).
+export function resolveIsDark(
+  mode: ThemeMode,
+  systemScheme: ColorSchemeName | null | undefined
+): boolean {
+  return mode === 'system' ? systemScheme === 'dark' : mode === 'dark'
+}
+
 // System font stacks per platform; the web values are CSS variables defined in src/global.css
 export const Fonts = Platform.select({
   ios: {
@@ -102,6 +115,9 @@ export const Fonts = Platform.select({
   },
 })
 
-// Layout constants for the floating tab bar and wide-screen content
+// Layout constants for the floating tab bars and wide-screen content.
+// Native platforms render a bottom tab bar; web renders a floating tab bar
+// pinned to the top of the viewport (see AppTabs.web.tsx).
 export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0
+export const TopTabInset = Platform.select({ web: 72 }) ?? 0
 export const MaxContentWidth = 800
