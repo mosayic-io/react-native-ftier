@@ -20,7 +20,7 @@ Your training data on Expo is likely stale. Consult the official docs before wri
 The app runs in a development build (`expo-dev-client`), installed once per simulator/device:
 
 - **Local build**: `npm run ios` / `npm run android` (`expo run:*`). Needs Xcode / Android Studio. Native projects are generated on the fly; `ios/` and `android/` stay gitignored (CNG).
-- **Cloud build**: `npx eas init` links the project to the user's Expo account (it writes `extra.eas.projectId` and `owner` into `app.json` — never hardcode those in the template). Then `npx eas build --profile development` and install the build on the device (internal distribution). Build profiles live in `eas.json` — there are exactly two, `development` and `production`.
+- **Cloud build**: `npx eas-cli init` links the project to the user's Expo account (it writes `extra.eas.projectId` and `owner` into `app.json` — never hardcode those in the template). Then `npx eas-cli build --profile development` and install the build on the device (internal distribution). Build profiles live in `eas.json` — there are exactly two, `development` and `production`. Note the npm package is `eas-cli` (`npx eas` does not work).
 - **Day-to-day**: once a build is installed, `npm start` is all that's needed. A native rebuild is only required when adding a package with native code that isn't already pre-installed (see Installed libraries — the common ones are).
 
 ## Commands
