@@ -32,7 +32,7 @@ This is your starting point for building a real iOS, Android, and web app with [
    npm install
    ```
 
-2. **Name your app.** `app.json` ships with the name and slug set to `change-me` — that's deliberate. Before anything else, set `name`, `slug`, and `scheme` to your app's real name (or ask your AI assistant to do it).
+2. **Name your app.** `app.json` ships with the name and slug set to `change-me`, the scheme set to `changeme`, and the bundle identifier / Android package set to `com.changeme.changeme` — that's deliberate. Before anything else, set `name`, `slug`, `scheme`, `ios.bundleIdentifier`, and `android.package` to your app's real identity, and match `package.json`'s `name` to the slug (or ask your AI assistant to do it).
 
 3. Build and install the app once. Locally, with Xcode / Android Studio installed:
 

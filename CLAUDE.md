@@ -4,7 +4,7 @@ Expo SDK 56 app — React Native 0.85, React 19.2.3, TypeScript (strict), file-b
 
 ## Naming — first task on a new project
 
-`app.json` ships with `name` and `slug` set to `change-me` (and `scheme` set to `changeme`). If they still say that, renaming the app is the first thing to do before any feature work: set `name`, `slug`, and `scheme` in `app.json`, then restart the dev server. The npm package name (`react-native-ftier`) is the template's name and stays as-is.
+`app.json` ships with `name` and `slug` set to `change-me`, `scheme` set to `changeme`, and the iOS bundle identifier / Android package set to `com.changeme.changeme`. If they still say that, renaming the app is the first thing to do before any feature work: set `name`, `slug`, `scheme`, `ios.bundleIdentifier`, and `android.package` in `app.json`, set the npm package `name` in `package.json` to match the slug, then restart the dev server. `grep -riE "change-?me" . --exclude-dir=node_modules` must come back empty when the rename is done. (The `version` fields stay at `0.0.1` — that's where every new app starts; only this template repo's own git tags advance.)
 
 ## Expo has changed — check the docs first
 

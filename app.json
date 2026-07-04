@@ -8,9 +8,11 @@
     "scheme": "changeme",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.changeme.changeme"
     },
     "android": {
+      "package": "com.changeme.changeme",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/logo.png",
