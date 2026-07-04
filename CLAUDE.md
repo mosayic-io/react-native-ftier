@@ -1,10 +1,10 @@
 # CLAUDE.md
 
-Expo SDK 56 app — React Native 0.85, React 19.2.3, TypeScript (strict), file-based routing via expo-router. Runs on iOS, Android, and web with no backend. Uses **development builds** — Expo Go is NOT supported and must never be suggested (the template pre-installs native modules, and the Expo Go app in the stores lags behind SDK 56).
+Expo SDK 56 app — React Native 0.85, React 19.2.3, TypeScript (strict), file-based routing via expo-router. Runs on iOS, Android, and web with no backend. Uses **development builds** — Expo Go is NOT supported and must never be suggested (the app pre-installs native modules, and the Expo Go app in the stores lags behind SDK 56).
 
 ## Naming — first task on a new project
 
-`app.json` ships with `name` and `slug` set to `change-me`, `scheme` set to `changeme`, and the iOS bundle identifier / Android package set to `com.changeme.changeme`. If they still say that, renaming the app is the first thing to do before any feature work: set `name`, `slug`, `scheme`, `ios.bundleIdentifier`, and `android.package` in `app.json`, set the npm package `name` in `package.json` to match the slug, then restart the dev server. `grep -riE "change-?me" . --exclude-dir=node_modules` must come back empty when the rename is done. (The `version` fields stay at `0.0.1` — that's where every new app starts; only this template repo's own git tags advance.)
+`app.json` ships with `name` and `slug` set to `change-me`, `scheme` set to `changeme`, and the iOS bundle identifier / Android package set to `com.changeme.changeme`. If they still say that, renaming the app is the first thing to do before any feature work: set `name`, `slug`, `scheme`, `ios.bundleIdentifier`, and `android.package` in `app.json`, set the npm package `name` in `package.json` to match the slug, then restart the dev server. `grep -riE "change-?me" . --exclude-dir=node_modules` must come back empty when the rename is done. (The `version` fields stay at `0.0.1` — that's where every new app starts.)
 
 ## Expo has changed — check the docs first
 
@@ -20,7 +20,7 @@ Your training data on Expo is likely stale. Consult the official docs before wri
 The app runs in a development build (`expo-dev-client`), installed once per simulator/device:
 
 - **Local build**: `npm run ios` / `npm run android` (`expo run:*`). Needs Xcode / Android Studio. Native projects are generated on the fly; `ios/` and `android/` stay gitignored (CNG).
-- **Cloud build**: needs the EAS CLI installed globally — `npm install -g eas-cli` (the package is `eas-cli`; `npx eas` does not work). `eas init` links the project to the user's Expo account (it writes `extra.eas.projectId` and `owner` into `app.json` — never hardcode those in the template). Then `eas build --profile development` and install the build on the device (internal distribution). Build profiles live in `eas.json` — there are exactly two, `development` and `production`.
+- **Cloud build**: needs the EAS CLI installed globally — `npm install -g eas-cli` (the package is `eas-cli`; `npx eas` does not work). `eas init` links the project to the user's Expo account (it writes `extra.eas.projectId` and `owner` into `app.json` — let `eas init` write them; never hardcode them by hand). Then `eas build --profile development` and install the build on the device (internal distribution). Build profiles live in `eas.json` — there are exactly two, `development` and `production`.
 - **Day-to-day**: once a build is installed, `npm start` is all that's needed. A native rebuild is only required when adding a package with native code that isn't already pre-installed (see Installed libraries — the common ones are).
 
 ## Commands
@@ -122,7 +122,7 @@ function MyScreenContent() {
 
 - **Client state**: Zustand stores in `src/stores/`. For state that should survive restarts, use the `persist` middleware with AsyncStorage — see `themeStore.ts` for the pattern. The root layout holds the splash screen until the theme store has rehydrated (`useThemeHydration`), so the first frame renders in the correct theme.
 - **One-off persistence**: the typed `storage` helper in `src/lib/storage.ts` (JSON over AsyncStorage).
-- There is no backend in this template. Data lives on-device.
+- There is no backend in this app. Data lives on-device.
 
 ## Installed libraries
 
@@ -149,7 +149,7 @@ Use these for their respective purposes. Do not introduce alternatives without e
 | Web content | `react-native-webview` |
 | Utilities | `expo-clipboard`, `expo-sharing`, `expo-file-system` |
 
-The device-capability modules (camera, location, media, etc.) are pre-installed even though the template code doesn't use them yet — this is deliberate, so their native code is already included in every development and EAS build and adding a feature never requires a rebuild. Use these instead of introducing alternatives. Pure-JS libraries can be added freely at any time.
+The device-capability modules (camera, location, media, etc.) are pre-installed even though the app code doesn't use them yet — this is deliberate, so their native code is already included in every development and EAS build and adding a feature never requires a rebuild. Use these instead of introducing alternatives. Pure-JS libraries can be added freely at any time.
 
 ## Conventions
 

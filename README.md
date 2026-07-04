@@ -1,8 +1,8 @@
-# React Native Starter Template
+# React Native Starter
 
-A [Kealy Studio](https://kealystudio.com) template — part of the **free tier** of the *App Dev with AI* course.
+A [Kealy Studio](https://kealystudio.com) starter — part of the **free tier** of the *App Dev with AI* course.
 
-This is your starting point for building a real iOS, Android, and web app with [Expo](https://expo.dev) and React Native, designed to be developed with AI coding tools like Claude Code. It uses **[development builds](https://docs.expo.dev/develop/development-builds/introduction/)**: you compile the app once (locally or in the cloud with EAS), install it on your simulator or phone, and from then on iterate with instant JavaScript reloads. Expo Go is not supported — this template ships native modules, and the Expo Go app in the stores lags behind SDK 56.
+This is your starting point for building a real iOS, Android, and web app with [Expo](https://expo.dev) and React Native, designed to be developed with AI coding tools like Claude Code. It uses **[development builds](https://docs.expo.dev/develop/development-builds/introduction/)**: you compile the app once (locally or in the cloud with EAS), install it on your simulator or phone, and from then on iterate with instant JavaScript reloads. Expo Go is not supported — this app ships native modules, and the Expo Go app in the stores lags behind SDK 56.
 
 ## What's inside
 
@@ -93,4 +93,4 @@ npm run typecheck  # TypeScript
 
 ## License
 
-© Kealy Studio. Provided to students of the App Dev with AI course for use in their own projects. Not for redistribution as a template.
+© Kealy Studio. Provided to students of the App Dev with AI course for use in their own projects. Not for redistribution as a starter kit.
