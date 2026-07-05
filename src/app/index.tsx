@@ -97,8 +97,10 @@ function HomeScreenContent() {
     <Screen centered>
       <View style={styles.logoContainer}>
         <Animated.View style={[styles.glow, pulseStyle]} />
-        <Animated.View entering={ZoomIn.springify().damping(12)} style={floatStyle}>
-          <Image source={require('@/assets/images/logo.png')} style={styles.logo} />
+        <Animated.View entering={ZoomIn.springify().damping(12)}>
+          <Animated.View style={floatStyle}>
+            <Image source={require('@/assets/images/logo.png')} style={styles.logo} />
+          </Animated.View>
         </Animated.View>
       </View>
 
