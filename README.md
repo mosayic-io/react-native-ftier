@@ -10,7 +10,7 @@ This is your starting point for building a real iOS, Android, and web app with [
 - **Development-build workflow** — `expo-dev-client` plus an `eas.json` with development, preview, and production build profiles
 - **Design token theme system** — semantic colors, spacing, typography, and radius scales in `src/lib/theme.ts`, with full light/dark support
 - **Persisted theme picker** — light/dark/system mode on the Settings tab, stored with Zustand + AsyncStorage and restored on launch (the splash screen holds until the saved theme loads, so there's no wrong-theme flash)
-- **UI primitives** — `Button`, `Input`, and `Text` components built on the theme tokens
+- **UI primitives** — `Button`, `Card`, `Input`, and `Text` components built on the theme tokens, exercised by a "Design preview" section on the home screen so a restyle is visible immediately
 - **Shared `Screen` scaffold** — safe areas, tab-bar clearance, and wide-screen max width handled in one place
 - **Error boundaries** — a global boundary in the root layout plus a `ScreenErrorBoundary` wrapping every screen
 - **Local storage** — `@react-native-async-storage/async-storage` with typed helpers in `src/lib/storage.ts`
@@ -66,7 +66,7 @@ You only need to rebuild the native app when you add a library containing native
 src/
 ├── app/            # Screens — each file is a route (Home, Settings)
 ├── components/
-│   ├── ui/         # Button, Input, Text
+│   ├── ui/         # Button, Card, Input, Text
 │   ├── error/      # Error boundaries
 │   ├── AppTabs     # Tab bar (native + web variants)
 │   └── Screen      # Shared screen scaffold (safe areas, tab insets, max width)

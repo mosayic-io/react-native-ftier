@@ -41,7 +41,7 @@ src/
 │   ├── index.tsx         # Home screen
 │   └── settings.tsx      # Settings screen (theme mode picker)
 ├── components/
-│   ├── ui/               # UI primitives (Button, Input, Text)
+│   ├── ui/               # UI primitives (Button, Card, Input, Text)
 │   ├── error/            # Error boundaries (ErrorBoundary, ScreenErrorBoundary)
 │   ├── AppTabs.tsx       # Tab bar (native tabs; AppTabs.web.tsx for web)
 │   └── Screen.tsx        # Shared screen scaffold (safe areas, tab insets, max width)
@@ -99,7 +99,7 @@ The theme mode (light/dark/system) lives in `src/stores/themeStore.ts`, persiste
 ## Component architecture
 
 - **Screen scaffold** (`src/components/Screen.tsx`): every screen renders its content inside `Screen`. It provides the themed background, safe-area padding, clearance for the floating tab bars, and a centered max-width column on wide viewports. Props: `scroll` (wraps content in a ScrollView) and `centered` (vertically centers hero-style content). Don't hand-roll safe-area or tab-inset handling in screens.
-- **UI primitives** (`src/components/ui/`): `Button` (variants: primary, secondary, outline, ghost, danger; sizes sm/md/lg; `loading`, `fullWidth`, `leftIcon`), `Input` (label, error, hint, icons, password toggle), `Text` (variants: h1, h2, h3, body, bodySmall, caption, label, code; `color` and `weight` props — each `color` value maps to the theme token of the same name). Import from the barrel: `import { Button, Text } from '@/components/ui'`.
+- **UI primitives** (`src/components/ui/`): `Button` (variants: primary, secondary, outline, ghost, danger; sizes sm/md/lg; `loading`, `fullWidth`, `leftIcon`), `Card` (surface container: padded, bordered panel with a `gap` between children), `Input` (label, error, hint, icons, password toggle), `Text` (variants: h1, h2, h3, body, bodySmall, caption, label, code; `color` and `weight` props — each `color` value maps to the theme token of the same name). Import from the barrel: `import { Button, Text } from '@/components/ui'`.
 - **Error boundaries** (`src/components/error/`): the root layout is wrapped in `ErrorBoundary`. Always wrap screen components with `ScreenErrorBoundary`:
 
 ```tsx

@@ -13,7 +13,7 @@ import Animated, {
 
 import { Screen } from '@/components'
 import { ScreenErrorBoundary } from '@/components/error'
-import { Text } from '@/components/ui'
+import { Button, Card, Input, Text } from '@/components/ui'
 import { useColors } from '@/hooks'
 import { borderRadius, spacing, type Colors } from '@/lib'
 
@@ -60,6 +60,22 @@ const createStyles = (colors: Colors) =>
       borderColor: colors.border,
       backgroundColor: colors.surface,
     },
+    previewWrap: {
+      width: '100%',
+      maxWidth: 420,
+      marginTop: spacing.lg,
+    },
+    previewHeader: {
+      gap: spacing.xs,
+    },
+    previewButtons: {
+      flexDirection: 'row',
+      gap: spacing.sm,
+    },
+    statusRow: {
+      flexDirection: 'row',
+      gap: spacing.md,
+    },
   })
 
 function HomeScreenContent() {
@@ -94,7 +110,7 @@ function HomeScreenContent() {
   }))
 
   return (
-    <Screen centered>
+    <Screen scroll centered>
       <View style={styles.logoContainer}>
         <Animated.View style={[styles.glow, pulseStyle]} />
         <Animated.View entering={ZoomIn.springify().damping(12)}>
@@ -127,6 +143,39 @@ function HomeScreenContent() {
           </Animated.View>
         ))}
       </View>
+
+      {/* Sample elements so an incoming design system has something to land
+          on — one of each primitive. Restyle these (or delete the section)
+          once the app has real screens. */}
+      <Animated.View entering={FadeInDown.delay(750).duration(600)} style={styles.previewWrap}>
+        <Card>
+          <View style={styles.previewHeader}>
+            <Text variant="h3">Design preview</Text>
+            <Text variant="caption">
+              Sample elements showing off this app’s design system. Restyle or
+              delete them.
+            </Text>
+          </View>
+          <Input label="Email" placeholder="you@example.com" leftIcon="mail-outline" />
+          <View style={styles.previewButtons}>
+            <Button size="sm">Get started</Button>
+            <Button size="sm" variant="outline">
+              Learn more
+            </Button>
+          </View>
+          <View style={styles.statusRow}>
+            <Text variant="caption" color="success">
+              ● Success
+            </Text>
+            <Text variant="caption" color="warning">
+              ● Warning
+            </Text>
+            <Text variant="caption" color="danger">
+              ● Error
+            </Text>
+          </View>
+        </Card>
+      </Animated.View>
     </Screen>
   )
 }
