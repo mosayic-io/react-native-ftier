@@ -9,6 +9,12 @@
     },
     "production": {
       "autoIncrement": true
+    },
+    "release": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
     }
   },
   "submit": {
