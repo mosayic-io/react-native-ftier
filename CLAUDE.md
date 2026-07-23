@@ -142,6 +142,7 @@ Use these for their respective purposes. Do not introduce alternatives without e
 | Photo picking | `expo-image-picker` |
 | Photo library | `expo-media-library` |
 | Location | `expo-location` |
+| Local notifications | `expo-notifications` — for on-device scheduled/local notifications only; push (remote) notifications are not set up |
 | Haptics | `expo-haptics` |
 | Video playback | `expo-video` |
 | SVG | `react-native-svg` |
