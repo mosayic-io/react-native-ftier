@@ -6,6 +6,8 @@ Expo SDK 56 app — React Native 0.85, React 19.2.3, TypeScript (strict), file-b
 
 `app.json` ships with `name` and `slug` set to `change-me`, `scheme` set to `changeme`, and the iOS bundle identifier / Android package set to `com.changeme.changeme`. If they still say that, renaming the app is the first thing to do before any feature work: set `name`, `slug`, `scheme`, `ios.bundleIdentifier`, and `android.package` in `app.json`, set the npm package `name` in `package.json` to match the slug, then restart the dev server. `grep -riE "change-?me" . --exclude-dir=node_modules` must come back empty when the rename is done. (The `version` fields stay at `0.0.1` — that's where every new app starts.)
 
+**Never write `CFBundleURLTypes` under `ios.infoPlist`.** Anything set there replaces the URL types Expo generates at prebuild, and that generated list is where the app's own `scheme` (and the bundle id) are registered — so a hand-written block silently drops the `scheme`, and every `changeme://` link, including the links site's "Open app" buttons, stops working on iOS while Google sign-in carries on as if nothing happened. Register extra schemes with the top-level `scheme` (it takes an array) or, for Google sign-in, the `@react-native-google-signin/google-signin` plugin's `iosUrlScheme`, which already adds the reversed client ID. Check with `npx expo config --type introspect` that `ios.infoPlist.CFBundleURLTypes` lists the `scheme`.
+
 ## Expo has changed — check the docs first
 
 Your training data on Expo is likely stale. Consult the official docs before writing code — do not use patterns from older SDKs from memory:
