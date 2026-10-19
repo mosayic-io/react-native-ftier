@@ -73,7 +73,10 @@
           "savePhotosPermission": "$(PRODUCT_NAME) would like to save photos",
           "isAccessMediaLocationEnabled": true
         }
-      ]
+      ],
+      "expo-font",
+      "expo-image",
+      "expo-status-bar"
     ],
     "experiments": {
       "typedRoutes": true,

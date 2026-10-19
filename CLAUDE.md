@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Expo SDK 56 app — React Native 0.85, React 19.2.3, TypeScript (strict), file-based routing via expo-router. Runs on iOS, Android, and web with no backend. Uses **development builds** — Expo Go is NOT supported and must never be suggested (the app pre-installs native modules, and the Expo Go app in the stores lags behind SDK 56).
+Expo SDK 57 app — React Native 0.86, React 19.2.3, TypeScript (strict), file-based routing via expo-router. Runs on iOS, Android, and web with no backend. Uses **development builds** — Expo Go is NOT supported and must never be suggested (the app pre-installs native modules, and the Expo Go app in the stores lags behind the SDK).
 
 ## Naming — first task on a new project
 
@@ -32,7 +32,9 @@ The app runs in a development build (`expo-dev-client`), installed once per simu
 - `npm run lint` — ESLint via `expo lint`
 - `npm run typecheck` — TypeScript check via `tsc --noEmit`
 
-Install libraries with `npx expo install <package>` — never plain `npm install` for runtime packages. It picks versions compatible with SDK 56.
+Install libraries with `npx expo install <package>` — never plain `npm install` for runtime packages. It picks versions compatible with SDK 57.
+
+`.claude/settings.json` enables Expo's official Claude Code plugin (`expo@claude-plugins-official`), which Claude Code offers to install the first time this folder is opened: Expo's own skills (`expo-router`, `expo-ui`, `expo-animation`, `expo-upgrade` and more) plus the Expo MCP server (sign in with `/mcp`). Use a skill when a task matches it; where a skill and this file disagree, this file wins (no Expo Go, ever). Leave `eas.json` without an `ios.image` and don't set `enableSceneSupport`: SDK 57 builds on Xcode 26.6 by default, and Xcode 27's scene life cycle belongs with SDK 58.
 
 ## Project structure
 

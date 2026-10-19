@@ -2,11 +2,11 @@
 
 A [Kealy Studio](https://kealystudio.com) starter — part of the **free tier** of the *App Dev with AI* course.
 
-This is your starting point for building a real iOS, Android, and web app with [Expo](https://expo.dev) and React Native, designed to be developed with AI coding tools like Claude Code. It uses **[development builds](https://docs.expo.dev/develop/development-builds/introduction/)**: you compile the app once (locally or in the cloud with EAS), install it on your simulator or phone, and from then on iterate with instant JavaScript reloads. Expo Go is not supported — this app ships native modules, and the Expo Go app in the stores lags behind SDK 56.
+This is your starting point for building a real iOS, Android, and web app with [Expo](https://expo.dev) and React Native, designed to be developed with AI coding tools like Claude Code. It uses **[development builds](https://docs.expo.dev/develop/development-builds/introduction/)**: you compile the app once (locally or in the cloud with EAS), install it on your simulator or phone, and from then on iterate with instant JavaScript reloads. Expo Go is not supported — this app ships native modules, and the Expo Go app in the stores lags behind the SDK.
 
 ## What's inside
 
-- **Expo SDK 56** (React Native 0.85, React 19.2.3) with **expo-router** file-based routing and typed routes
+- **Expo SDK 57** (React Native 0.86, React 19.2.3) with **expo-router** file-based routing and typed routes
 - **Development-build workflow** — `expo-dev-client` plus an `eas.json` with development, preview, and production build profiles
 - **Design token theme system** — semantic colors, spacing, typography, and radius scales in `src/lib/theme.ts`, with full light/dark support
 - **Persisted theme picker** — light/dark/system mode on the Settings tab, stored with Zustand + AsyncStorage and restored on launch (the splash screen holds until the saved theme loads, so there's no wrong-theme flash)
